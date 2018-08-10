@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<options>
+  <option option_id="uservoiceDislikeCoefficient" edit_format="textbox" data_type="numeric">
+    <default_value>-0.3</default_value>
+    <relation group_id="ServerdevUservoice" display_order="2"/>
+  </option>
+  <option option_id="uservoiceLikeCoefficient" edit_format="textbox" data_type="numeric">
+    <default_value>0.5</default_value>
+    <relation group_id="ServerdevUservoice" display_order="1"/>
+  </option>
+</options>

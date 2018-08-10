@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<class_extensions>
+  <extension from_class="XF\Admin\Controller\Forum" to_class="ServerDev\UserVoice\XF\Admin\Controller\Forum" execute_order="10" active="1"/>
+  <extension from_class="XF\ControllerPlugin\Like" to_class="ServerDev\UserVoice\XF\ControllerPlugin\Like" execute_order="10" active="1"/>
+  <extension from_class="XF\Entity\Forum" to_class="ServerDev\UserVoice\XF\Entity\Forum" execute_order="10" active="1"/>
+  <extension from_class="XF\Entity\LikedContent" to_class="ServerDev\UserVoice\XF\Entity\LikedContent" execute_order="10" active="1"/>
+  <extension from_class="XF\Entity\Post" to_class="ServerDev\UserVoice\XF\Entity\Post" execute_order="10" active="1"/>
+  <extension from_class="XF\Entity\Thread" to_class="ServerDev\UserVoice\XF\Entity\Thread" execute_order="10" active="1"/>
+  <extension from_class="XF\Pub\Controller\Forum" to_class="ServerDev\UserVoice\XF\Pub\Controller\Forum" execute_order="10" active="1"/>
+  <extension from_class="XF\Pub\Controller\Thread" to_class="ServerDev\UserVoice\XF\Pub\Controller\Thread" execute_order="10" active="1"/>
+  <extension from_class="XF\Repository\LikedContent" to_class="ServerDev\UserVoice\XF\Repository\LikedContent" execute_order="10" active="1"/>
+  <extension from_class="XF\Repository\Thread" to_class="ServerDev\UserVoice\XF\Repository\Thread" execute_order="10" active="1"/>
+  <extension from_class="XF\Service\Post\Preparer" to_class="ServerDev\UserVoice\XF\Service\Post\Preparer" execute_order="10" active="1"/>
+  <extension from_class="XF\Service\Thread\Editor" to_class="ServerDev\UserVoice\XF\Service\Thread\Editor" execute_order="10" active="1"/>
+</class_extensions>

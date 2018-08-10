@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phrases>
+  <phrase title="custom_bb_code_desc.prefix" version_id="1001002" version_string="1.0.10 v2"><![CDATA[Used for show Thread Prefixes inside posts]]></phrase>
+  <phrase title="custom_bb_code_example.prefix" version_id="1001002" version_string="1.0.10 v2"><![CDATA[]]></phrase>
+  <phrase title="custom_bb_code_output.prefix" version_id="1001002" version_string="1.0.10 v2"><![CDATA[]]></phrase>
+  <phrase title="custom_bb_code_title.prefix" version_id="1001002" version_string="1.0.10 v2"><![CDATA[Thread Prefix]]></phrase>
+  <phrase title="members_who_voted_against_x" version_id="1001004" version_string="1.0.10 v4"><![CDATA[Members who voted against for {title}]]></phrase>
+  <phrase title="members_who_voted_x" version_id="1001000" version_string="1.0.10"><![CDATA[Members who voted for {title}]]></phrase>
+  <phrase title="no_one_has_liked_against_this_content_yet" version_id="1001004" version_string="1.0.10 v4"><![CDATA[No one has disliked this content yet.]]></phrase>
+  <phrase title="option.uservoiceDislikeCoefficient" version_id="1001004" version_string="1.0.10 v4"><![CDATA[Dislkes coefficient]]></phrase>
+  <phrase title="option.uservoiceLikeCoefficient" version_id="1001004" version_string="1.0.10 v4"><![CDATA[Likes coefficient]]></phrase>
+  <phrase title="option_explain.uservoiceDislikeCoefficient" version_id="1001004" version_string="1.0.10 v4"><![CDATA[]]></phrase>
+  <phrase title="option_explain.uservoiceLikeCoefficient" version_id="1001004" version_string="1.0.10 v4"><![CDATA[]]></phrase>
+  <phrase title="option_group.ServerdevUservoice" version_id="1001004" version_string="1.0.10 v4"><![CDATA[[ServerDev] UserVoice]]></phrase>
+  <phrase title="option_group_description.ServerdevUservoice" version_id="1001004" version_string="1.0.10 v4"><![CDATA[UserVoice rating coefficients]]></phrase>
+  <phrase title="x_voted_for_y" version_id="1001001" version_string="1.0.10 v1"><![CDATA[{name} voted for {title}.]]></phrase>
+</phrases>

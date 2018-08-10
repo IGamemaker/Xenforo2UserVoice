@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_event_listeners>
+  <listener event_id="entity_structure" execute_order="10" callback_class="ServerDev\UserVoice\Listener" callback_method="forumEntityStructure" active="1" hint="XF\Entity\Forum" description="Allow transform forum to uservoice forum"/>
+  <listener event_id="templater_macro_pre_render" execute_order="10" callback_class="ServerDev\UserVoice\Listener" callback_method="threadItemRender" active="1" hint="public:thread_list_macros:item" description="Redirect render macro for uservoice forum"/>
+</code_event_listeners>

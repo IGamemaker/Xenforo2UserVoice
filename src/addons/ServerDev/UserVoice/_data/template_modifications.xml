@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template_modifications>
+  <modification type="admin" template="forum_edit" modification_key="add_uservoice" description="Add checkbox for transform forum to uservoice forum" execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[<xf:checkboxrow>
+				<xf:option name="allow_posting" selected="$forum.allow_posting"
+					label="{{ phrase('allow_new_messages_to_be_posted_in_this_forum') }}"
+					hint="{{ phrase('if_disabled_users_not_able_post_messages_in_forum') }}" />]]></find>
+    <replace><![CDATA[<xf:checkboxrow>
+				<xf:option name="uservoice" selected="$forum.uservoice_forum"
+					label="Transform forum to uservoice forum"
+					hint="On enable all threads become global voteable" />
+</xf:checkboxrow>
+
+<hr class="formRowSep" />
+
+$0]]></replace>
+  </modification>
+  <modification type="public" template="forum_filters" modification_key="add_sort_for_uservoice_forum" description="Add sorting by votes for UserVoice Forum" execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[<xf:option value="last_post_date">{{ phrase('last_message') }}</xf:option>]]></find>
+    <replace><![CDATA[<xf:if is="$forum.uservoice_forum"><xf:option value="likes">Votes</xf:option></xf:if>
+$0]]></replace>
+  </modification>
+  <modification type="public" template="forum_view" modification_key="add_top_voted_uservoice_forum" description="Add Top Voted button for UserVoice forum" execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[			<div class="buttonGroup">
+				<xf:contentcheck>
+					<xf:if is="$canInlineMod">
+						<xf:macro template="inline_mod_macros" name="button" />
+					</xf:if>
+]]></find>
+    <replace><![CDATA[			<xf:if is="$forum.uservoice_forum">
+				<div class="buttonGroup">
+				<xf:button href="{{ link('forums', $forum, {'order': 'likes', 'direction': 'desc'}) }}"
+					class="button--link">
+					Top
+				</xf:button>
+				<xf:button href="{{ link('forums', $forum, {'order': 'post_date', 'direction': 'desc'}) }}"
+					class="button--link">
+					New
+				</xf:button>
+			</div>
+</xf:if>
+$0]]></replace>
+  </modification>
+  <modification type="public" template="helper_thread_options" modification_key="add_thread_base_likes" description="Add UserVoice thread base likes" execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[<xf:macro name="thread_status"
+	arg-thread="!"
+	arg-rowType="">]]></find>
+    <replace><![CDATA[$0
+<xf:if is="$thread.canChangeBaseLikes()">
+	<xf:numberboxrow name="likes_base"
+				maxlength="250"
+				value="{$thread.likes_base}"
+				label="Base Likes" />
+</xf:if>]]></replace>
+  </modification>
+  <modification type="public" template="structured_list.less" modification_key="structured_list_uservoice" description="Add uservoice icon to structured list" execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[&--watched::before]]></find>
+    <replace><![CDATA[&--uservoice::before{ .m-faContent(@fa-var-lightbulb-o, 1.04em); color: @xf-textColorFeature; }
+	$0]]></replace>
+  </modification>
+  <modification type="public" template="thread_list_macros" modification_key="thread_macro_uservoice_icon" description="Add uservoice icon for thread list" execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[<xf:if is="!$thread.discussion_open">
+]]></find>
+    <replace><![CDATA[					<xf:if is="$forum" >
+						<xf:if is="$forum.uservoice_forum">
+							<li>
+								<i class="structItem-status structItem-status--uservoice" aria-hidden="true" title="UserVoice"></i>
+								<span class="u-srOnly">UserVoice</span>
+							</li>
+						</xf:if>
+					<xf:else/>
+						<xf:if is="$thread.Forum.uservoice_forum" >
+							<li>
+								<i class="structItem-status structItem-status--uservoice" aria-hidden="true" title="UserVoice"></i>
+								<span class="u-srOnly">UserVoice</span>
+							</li>
+						</xf:if>
+					</xf:if>
+					$0]]></replace>
+  </modification>
+  <modification type="public" template="thread_view" modification_key="add_vote_uservoice_thread_itself" description="Add Vote button for UserVoice thread itself" execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[			<div class="buttonGroup">
+				<xf:contentcheck>
+					<xf:if is="$canInlineMod">
+						<xf:macro template="inline_mod_macros" name="button" />
+					</xf:if>
+]]></find>
+    <replace><![CDATA[<xf:if is="$thread.Forum.uservoice_forum">
+	<xf:js src="serverdev/vote.js" />
+			<div class="buttonGroup">			
+				<xf:if is="$thread.canVote()">
+					<a href="{{ link('threads/vote', $thread) }}" class="button button--link" 
+					   data-xf-click="vote" data-vote-thread=".js-vote-thread-{$thread.thread_id}" ignore-vote-ajax="1">
+						<strong class="js-vote-thread-{$thread.thread_id}">{{$thread.likes + $thread.likes_base}}</strong>
+						<span>Vote{{($thread.likes + $thread.likes_base) > 1?'s':''}}</span>
+					</a>
+				<xf:elseif is="$thread.isVoteInitiator()"/>
+					<div class="button button--link">
+						<strong class="js-vote-thread-{$thread.thread_id}">{{$thread.likes + $thread.likes_base}}</strong>
+						<span>Vote{{($thread.likes + $thread.likes_base) > 1?'s':''}}</span>
+					</div>
+				</xf:if>
+			</div>
+</xf:if>
+$0]]></replace>
+  </modification>
+</template_modifications>

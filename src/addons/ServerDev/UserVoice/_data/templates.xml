@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+  <template type="public" title="alert_thread_like" version_id="1001001" version_string="1.0.10 v1"><![CDATA[{{ phrase('x_voted_for_y', {
+	'name': username_link($user, false, {'defaultname': $alert.username}),
+	'title': '<a href="' . link('threads', $content) . '" class="fauxBlockLink-blockLink">' . prefix('thread', $content) . $content.title . '</a>'
+}) }}]]></template>
+  <template type="public" title="like_item_thread" version_id="1001001" version_string="1.0.10 v1"><![CDATA[<xf:macro name="like_snippet" arg-liker="!" arg-thread="!" arg-date="!" arg-fallbackName="{{ phrase('unknown_member') }}">
+	<div class="contentRow-title">
+		{{ phrase('x_voted_for_y', {
+			'name': username_link($liker, false, {'defaultname': $fallbackName}),
+			'title': '<a href="' . link('threads', $thread) . '">' . prefix('thread', $thread) . $thread.title . '</a>'
+		}) }}
+	</div>
+
+	<div class="contentRow-snippet">{{
+		snippet($post.FirstPost.message, $xf.options.newsFeedMessageSnippetLength, {'stripQuote': true})
+	}}</div>
+
+	<div class="contentRow-minor"><xf:date time="{$date}" /></div>
+</xf:macro>
+
+<xf:macro name="like_snippet" arg-liker="{$like.Liker}" arg-thread="{$content}" arg-date="{$like.like_date}" />]]></template>
+  <template type="public" title="uservoice.less" version_id="1001004" version_string="1.0.10 v4"><![CDATA[.structItem-cell{
+	&.structItem-cell--icon{
+		&.structItem-cell--iconExpanded-uservoice{
+  			width: 80px;
+		}
+	}
+}
+
+.votes-info{
+	display: inline-block;
+    border-radius: 2px;
+    vertical-align: top;
+	width: 100%;
+	height: 64px;
+	
+	background-color: @xf-borderColor;
+    border: 1px solid @xf-borderColorHeavy;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    color: #646B72;
+    font-size: 12px;
+    line-height: 14px;
+    margin-bottom: 3px;
+    padding: 12px 0 9px 0;
+    text-align: center;
+		
+	& strong{
+		color: @xf-linkColor;
+		display: block;
+		font-size: 27px;
+		font-weight: bold;
+		margin-bottom: 5px;
+		line-height: 35px;
+	}
+}
+
+.vote-button{
+	width: 100%;
+	padding: 0px 14px 0px 14px !important;
+	margin-top: 4px;
+	font-size: 12px;
+	
+	&.vote-disabled{
+		
+		background: xf-default(@xf-pageBg, transparent);
+
+		&:hover,
+		&:active,
+		&:focus
+		{
+			background: xf-default(@xf-pageBg, transparent) !important;
+		}
+	}
+	
+	&.vote-disabled-text{
+		color: @xf-textColorMuted;
+	}
+	
+	&.vote-group-button{
+		width: unset;
+		padding: 0px 0px 0px 0px !important;
+		font-size: 15px;
+		
+		&.vote-for{
+			width: 50%;
+		}
+		
+		&.vote-against{
+			width: 50%;
+			color: fade(@xf-paletteNeutral5, 50%)
+		}
+	}
+}
+
+.vote-group{
+	width: 100%;
+	
+	& .vote-for-details{
+		width: 50%;
+		display: inline-block;
+		float: left;
+		text-align: center;
+		font-size: 0.9em;
+		
+		color: @xf-linkColor;
+	}
+		
+	& .vote-against-details{
+		width: 50%;
+		display: inline-block;
+		float: left;
+		text-align: center;
+		font-size: 0.9em;
+		
+		color: fade(@xf-paletteNeutral5, 50%)
+	}
+	
+	& .vote-opacity .fa{
+		color: fade(@xf-linkColor, 30%)
+	}
+}
+
+.vote-messageBody{
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.vote-staffAnswer{
+	position: relative;
+	margin-top: 0.7em;
+	margin-left: @xf-messagePadding*1.5;
+}
+
+.vote-replyIcon{
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 12px !important;
+}
+
+.vote-userArrow
+{
+	position: absolute;
+	top: 2px;
+	left: -@xf-messagePadding;
+
+	.m-triangleRight(xf-default(@xf-messageUserBlock--border-color, transparent), @xf-messagePadding/2);
+
+	&:after
+	{
+		position: absolute;
+		top: -(@xf-messagePadding/2 - 1px);
+		right: 1px;
+		content: "";
+
+		.m-triangleRight(@xf-contentBg, @xf-messagePadding/2 - 1px);
+	}
+}
+
+.voted-here{
+	background-color: @xf-borderColor !important;
+}]]></template>
+  <template type="public" title="uservoice_thread_list_macros" version_id="1001004" version_string="1.0.10 v4"><![CDATA[<xf:macro name="item"
+	arg-thread="!"
+	arg-forum=""
+	arg-forceRead="{{ false }}"
+	arg-showWatched="{{ true }}"
+	arg-allowInlineMod="{{ true }}"
+	arg-chooseName=""
+	arg-extraInfo=""
+	arg-allowEdit="{{ true }}">
+			
+	<xf:css src="structured_list.less" />
+	<xf:css src="uservoice.less" />
+	<xf:js src="serverdev/vote.js" />
+	
+	<div class="structItem structItem--thread{{ $thread.prefix_id ? ' is-prefix' . $thread.prefix_id : '' }}{{ $thread.isIgnored() ? ' is-ignored' : '' }}{{ ($thread.isUnread() AND !$forceRead) ? ' is-unread' : '' }}{{ $thread.discussion_state == 'moderated' ? ' is-moderated' : '' }}{{ $thread.discussion_state == 'deleted' ? ' is-deleted' : '' }} js-inlineModContainer js-threadListItem-{$thread.thread_id}" data-author="{{ $thread.User.username ?: $thread.username }}">
+		<div class="structItem-cell structItem-cell--icon structItem-cell--iconExpanded-uservoice">
+			<div class="votes-info structItem-iconContainer">
+				<strong class="js-vote-thread-{$thread.thread_id}">
+					<span class="js-vote-rating">{$thread.getVoteRating()}</span>
+				</strong>
+					
+				<xf:if is="$thread.getUserPostCount()">
+					<xf:avatar user="$xf.visitor" size="s"
+						href=""
+						class="avatar--separated structItem-secondaryIcon"
+						title="You start this discussion" />
+				</xf:if>
+			</div>
+			
+			<xf:if is="$thread.canVote()">
+				<div class="buttonGroup vote-group">
+					<a href="{{ link('threads/vote', $thread) }}" 
+					   class="button button--link vote-button js-vote-like-button-{$thread.thread_id} vote-group-button vote-for {{$thread.isVotedFor()?'voted-here':''}}" 
+					   data-xf-click="vote" data-thread-id="{$thread.thread_id}" data-vote-thread=".js-vote-thread-{$thread.thread_id}">
+						<i class="fa fa-thumbs-up" aria-hidden="true"></i>
+					</a>
+					
+					<a href="{{ link('threads/vote-against', $thread) }}" 
+					   class="button button--link vote-button js-vote-unlike-button-{$thread.thread_id} vote-group-button vote-against {{$thread.isVotedAgainst()?'voted-here':''}}" 
+					   data-xf-click="vote" data-thread-id="{$thread.thread_id}" data-vote-thread=".js-vote-thread-{$thread.thread_id}" ignore-vote-ajax="true">
+						<i class="fa fa-thumbs-down fa-flip-horizontal" aria-hidden="true"></i>
+					</a>
+				</div>
+			<xf:else/>
+				<div class="buttonGroup vote-group">
+					<div class="button button--link vote-button js-vote-like-button vote-group-button vote-for vote-opacity {{$thread.isVotedFor()?'voted-here':''}}">
+						<i class="fa fa-thumbs-up" aria-hidden="true"></i>
+					</div>
+					
+					<div class="button button--link vote-button js-vote-unlike-button vote-group-button vote-against vote-opacity {{$thread.isVotedAgainst()?'voted-here':''}}" >
+						<i class="fa fa-thumbs-down fa-flip-horizontal" aria-hidden="true"></i>
+					</div>
+				</div>
+			</xf:if>
+			
+			<div class="vote-group">
+				<span class="js-vote-likes-{$thread.thread_id} vote-for-details">{{$thread.likes + $thread.likes_base}}</span>
+				<span class="js-vote-dislikes-{$thread.thread_id} vote-against-details">{{$thread.dislikes + $thread.dislikes_base}}</span>
+			</div>
+		</div>
+		<div class="structItem-cell structItem-cell--main" data-xf-init="touch-proxy">
+			<xf:if contentcheck="true">
+				<ul class="structItem-statuses">
+				<xf:contentcheck>
+					<xf:if is="$thread.discussion_state == 'moderated'">
+						<li>
+							<i class="structItem-status structItem-status--moderated" aria-hidden="true" title="{{ phrase('awaiting_approval')|for_attr }}"></i>
+							<span class="u-srOnly">{{ phrase('awaiting_approval') }}</span>
+						</li>
+					</xf:if>
+					<xf:if is="$thread.discussion_state == 'deleted'">
+						<li>
+							<i class="structItem-status structItem-status--deleted" aria-hidden="true" title="{{ phrase('deleted')|for_attr }}"></i>
+							<span class="u-srOnly">{{ phrase('deleted') }}</span>
+						</li>
+					</xf:if>
+					<xf:if is="$thread.sticky">
+						<li>
+							<i class="structItem-status structItem-status--sticky" aria-hidden="true" title="{{ phrase('sticky')|for_attr }}"></i>
+							<span class="u-srOnly">{{ phrase('sticky') }}</span>
+						</li>
+					</xf:if>
+					<xf:if is="!$thread.discussion_open">
+						<li>
+							<i class="structItem-status structItem-status--locked" aria-hidden="true" title="{{ phrase('locked')|for_attr }}"></i>
+							<span class="u-srOnly">{{ phrase('locked') }}</span>
+						</li>
+					</xf:if>
+					<xf:if is="$thread.discussion_type == 'redirect'">
+						<li>
+							<i class="structItem-status structItem-status--redirect" aria-hidden="true" title="{{ phrase('redirect')|for_attr }}"></i>
+							<span class="u-srOnly">{{ phrase('redirect') }}</span>
+						</li>
+					<xf:elseif is="$thread.discussion_type == 'poll'" />
+						<li>
+							<i class="structItem-status structItem-status--poll" aria-hidden="true" title="{{ phrase('poll')|for_attr }}"></i>
+							<span class="u-srOnly">{{ phrase('poll') }}</span>
+						</li>
+					</xf:if>
+					<xf:if is="{$showWatched} AND {$xf.visitor.user_id}">
+						<xf:if is="{$thread.Watch.{$xf.visitor.user_id}}">
+							<li>
+								<i class="structItem-status structItem-status--watched" aria-hidden="true" title="{{ phrase('thread_watched')|for_attr }}"></i>
+								<span class="u-srOnly">{{ phrase('thread_watched') }}</span>
+							</li>
+						<xf:elseif is="!$forum AND {$thread.Forum.Watch.{$xf.visitor.user_id}}" />
+							<li>
+								<i class="structItem-status structItem-status--watched" aria-hidden="true" title="{{ phrase('forum_watched')|for_attr }}"></i>
+								<span class="u-srOnly">{{ phrase('forum_watched') }}</span>
+							</li>
+						</xf:if>
+					</xf:if>
+				</xf:contentcheck>
+				</ul>
+			</xf:if>
+
+			<div class="structItem-title">
+				<xf:set var="$canPreview" value="{{ $thread.canPreview() }}" />
+				<xf:if is="$thread.prefix_id">
+					<xf:if is="$forum">
+						<a href="{{ link('forums', $forum, {'prefix_id': $thread.prefix_id}) }}" class="labelLink">{{ prefix('thread', $thread, 'html', '') }}</a>
+					<xf:else />
+						{{ prefix('thread', $thread, 'html', '') }}
+					</xf:if>
+				</xf:if>
+				<a href="{{ link('threads' . (($thread.isUnread() AND !$forceRead) ? '/unread' : ''), $thread) }}" class="" data-tp-primary="on" data-xf-init="{{ $canPreview ? 'preview-tooltip' : '' }}" data-preview-url="{{ $canPreview ? link('threads/preview', $thread) : '' }}">{$thread.title}</a>
+			</div>
+			
+			<div class="structItem-minor vote-messageBody">
+				{{
+					snippet($thread.FirstPost.message, 500, {'stripQuote':true})
+				}}
+			</div>
+			
+			<div class="structItem-minor">
+				<xf:if contentcheck="true">
+					<ul class="structItem-extraInfo">
+					<xf:contentcheck>
+						<xf:if is="{$extraInfo}">
+							<li>{$extraInfo}</li>
+						<xf:elseif is="$thread.canEdit() AND $thread.canUseInlineModeration() AND {$allowEdit}" />
+							<xf:if is="!$allowInlineMod OR !$forum">
+								<xf:set var="$editParams" value="{{ {
+									'_xfNoInlineMod': !$allowInlineMod ? 1 : null,
+									 '_xfForumName': !$forum ? 1 : 0
+								} }}" />
+							<xf:else />
+								<xf:set var="$editParams" value="{{ [] }}" />
+							</xf:if>
+							<xf:if is="$thread.discussion_type != 'redirect'">
+								<li class="structItem-extraInfoMinor">
+									<a href="{{ link('threads/edit', $thread) }}" data-xf-click="overlay" data-href="{{ link('threads/edit', $thread, $editParams) }}">
+										{{ phrase('edit') }}
+									</a>
+								</li>
+							</xf:if>
+						</xf:if>
+						<xf:if is="$chooseName">
+							<li><xf:checkbox standalone="true">
+								<xf:option name="{$chooseName}[]" value="{$thread.thread_id}" class="js-chooseItem" />
+							</xf:checkbox></li>
+						<xf:elseif is="$allowInlineMod AND $thread.canUseInlineModeration()" />
+							<li><xf:checkbox standalone="true">
+								<xf:option value="{$thread.thread_id}" class="js-inlineModToggle"
+									data-xf-init="tooltip"
+									title="{{ phrase('select_for_moderation')|for_attr }}" />
+							</xf:checkbox></li>
+						</xf:if>
+					</xf:contentcheck>
+					</ul>
+				</xf:if>
+
+				<xf:if is="$thread.discussion_state == 'deleted'">
+					<xf:if is="{$extraInfo}"><span class="structItem-extraInfo">{$extraInfo}</span></xf:if>
+
+					<xf:macro template="deletion_macros" name="notice" arg-log="{$thread.DeletionLog}" />
+				<xf:else />
+					<ul class="structItem-parts">
+						<li><xf:username user="$thread.User" defaultname="{$thread.username}" /></li>
+						<li class="structItem-startDate"><a href="{{ link('threads', $thread) }}" rel="nofollow"><xf:date time="{$thread.post_date}" /></a></li>
+						<xf:if is="!$forum">
+							<li><a href="{{ link('forums', $thread.Forum) }}">{$thread.Forum.title}</a></li>
+						</xf:if>
+					</ul>
+
+					<xf:if is="$thread.discussion_type != 'redirect' && $thread.reply_count >= $xf.options.messagesPerPage && $xf.options.lastPageLinks">
+						<span class="structItem-pageJump">
+						<xf:foreach loop="{{ last_pages($thread.reply_count + 1, $xf.options.messagesPerPage, $xf.options.lastPageLinks) }}" value="$p">
+							<a href="{{ link('threads', $thread, {'page': $p}) }}">{$p}</a>
+						</xf:foreach>
+						</span>
+					</xf:if>
+				</xf:if>
+			</div>
+			
+			<xf:if is="$thread.StaffPost">
+				<div class="vote-staffAnswer">
+					<div class="vote-userArrow"></div>
+					
+					<div class="structItem-minor">
+						<ul class="structItem-parts">
+							<li>
+								<xf:avatar user="$thread.StaffPost.User" size="s"
+									href=""
+									class="avatar--separated vote-replyIcon"/>
+								<xf:username user="$thread.StaffPost.User" defaultname="{$thread.StaffPost.username}" />
+							</li>
+							<li>
+									{{
+										snippet($thread.StaffPost.message, 250, {'stripQuote':true} )
+									}}
+							</li>
+						</ul>
+					</div>
+				</div>
+			</xf:if>
+		</div>
+		<div class="structItem-cell structItem-cell--meta" title="{{ phrase('first_message_likes:')|for_attr }} {$thread.first_post_likes|number}">
+			<dl class="pairs pairs--justified">
+				<dt>{{ phrase('replies') }}</dt>
+				<dd>{{ $thread.discussion_type == 'redirect' ? '&ndash;' : $thread.reply_count|number }}</dd>
+			</dl>
+			<dl class="pairs pairs--justified structItem-minor">
+				<dt>{{ phrase('views') }}</dt>
+				<dd>{{ $thread.discussion_type == 'redirect' ? '&ndash;' : ($thread.view_count > $thread.reply_count ? $thread.view_count|number : number($thread.reply_count+1)) }}</dd>
+			</dl>
+		</div>
+		<div class="structItem-cell structItem-cell--latest">
+			<xf:if is="$thread.discussion_type == 'redirect'">
+				{{ phrase('n_a') }}
+			<xf:else />
+				<a href="{{ link('threads/latest', $thread) }}" rel="nofollow"><xf:date time="{$thread.last_post_date}" class="structItem-latestDate" /></a>
+				<div class="structItem-minor">
+					<xf:if is="$xf.visitor.isIgnoring($thread.last_post_user_id)">
+						{{ phrase('ignored_member') }}
+					<xf:else />
+						<xf:username user="{$thread.last_post_cache}" />
+					</xf:if>
+				</div>
+			</xf:if>
+		</div>
+	</div>
+</xf:macro>]]></template>
+</templates>

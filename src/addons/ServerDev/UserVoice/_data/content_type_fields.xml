@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content_type_fields>
+  <field content_type="thread" field_name="like_handler_class">ServerDev\UserVoice\Like\Thread</field>
+</content_type_fields>
